@@ -55,7 +55,7 @@ $itemlist->setItems([
 ```
 
 ### Quickly creating a Catalog
-You can quickly create a new Catalog using the static `make()` function. The first parameter is an array of the columns, the second parameters is an array with the items of the table nested as arrays.
+You can also quickly create a new Catalog using the static `make()` function. The first parameter is an array of the columns, the second parameters is an array with the items of the table nested as arrays.
 
 Example: creating a table with three columns and two items inside.
 ``` php
@@ -72,7 +72,7 @@ $catalog = Catalog::make([
 
 The Catalog also has a fluent interface which lets you to append methods, like the Laravel Query Builder.
 ``` php
-Catalog::make()->setColumns($columns)->setItems($items)->addItem($item); // ...and so on
+Catalog::setColumns($columns)->setItems($items)->addItem($item); // ...and so on
 ```
 
 ### Printing the table inside the view
