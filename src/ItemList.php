@@ -249,4 +249,16 @@ class ItemList
         
         return null;
     }
+    
+    /**
+     * The __isset magic method is triggered whenever an inaccessible attribute (for example those exposed via __get)
+     * is called inside of an empty() or isset() construct.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        return ! empty($this->{$key});
+    }
 }

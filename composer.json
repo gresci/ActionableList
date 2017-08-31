@@ -1,7 +1,7 @@
 {
     "name": "gasparilab/actionablelist",
     "type": "library",
-    "description": "Generate actionable lists for admin panels and alike.",
+    "description": "Generate actionable lists for admin panels.",
     "keywords": [
         "GaspariLab",
         "ActionableList"
