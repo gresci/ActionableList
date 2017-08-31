@@ -215,7 +215,7 @@ class ItemList
         }
         
         // Merge using array_values to remove non-numeric indexes from the columns array
-        $this->action = array_merge($this->actions, array_values($actions));
+        $this->actions = array_merge($this->actions, array_values($actions));
         
         return $this;
     }
@@ -243,7 +243,7 @@ class ItemList
     public function __get($key)
     {
         // We expose the attributes this way to make them read-only.
-        if (in_array($key, ['columns', 'items'])) {
+        if (in_array($key, ['columns', 'items', 'actions'])) {
             return $this->{$key};
         }
         

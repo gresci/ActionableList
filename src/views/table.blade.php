@@ -40,8 +40,7 @@
                 @if (! empty($catalog->actions))
                     <td class="col-button">
                         @foreach ($catalog->actions as $action)
-                            <a href="{{-- url($bladeParams['baseUrl'].'/'.$info->id.'/edit') --}}" class="btn btn-main btn-circle m-2" title="Modifica">
-                            <span class="icon icon-pencil"></span></a>
+                            <a href="edit">Edit</a>
                         @endforeach
                     </td>
                 @endif
