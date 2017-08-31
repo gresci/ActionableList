@@ -40,7 +40,7 @@
                 @if (! empty($catalog->actions))
                     <td class="col-button">
                         @foreach ($catalog->actions as $action)
-                            <a href="edit">Edit</a>
+                            {{ $action }}
                         @endforeach
                     </td>
                 @endif
