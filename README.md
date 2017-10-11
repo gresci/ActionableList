@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is a package for **Laravel 5.4** that lets you easily create catalogs of items and show them as tables, especially for administration panels.
+This is a package for **Laravel 5.5** that lets you easily create catalogs of items and show them as tables, especially for administration panels.
 
 ## Postcardware
 
