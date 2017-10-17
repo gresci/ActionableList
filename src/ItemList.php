@@ -61,24 +61,19 @@ class ItemList
     {
         $this->columns = [];
 
-        return $this->addColumns($columns);
+        return $this->addColumns(is_array($columns) ? $columns : [$columns]);
     }
 
     /**
-     * Adds columns to the existing list of columns.
-     * You can pass a string to create a column with that name, or an array which will be passed
-     * into the constructor of the column. You can also pass an already instantiated Column class.
+     * Add an array of columns (as strings, or arrays with name + slug + sortable name values, or already
+     * instantiated Column objects) to the existing list of columns.
      *
-     * @param  array|string|Column  $columns
+     * @param  array  $columns
      *
      * @return self
      */
-    public function addColumns($columns)
+    public function addColumns(array $columns)
     {
-        if (! is_array($columns)) {
-            $columns = [$columns];
-        }
-
         // This cycle modifies the $columns array, keeping any non-numeric index as it is.
         foreach ($columns as $key => $value) {
             // If the value is a string, just create a column with that name.
@@ -104,7 +99,20 @@ class ItemList
     }
 
     /**
-     * Gets the items of the table.
+     * Add a column to the existing list of columns.
+     * You can pass a string to create a column with that name, or an already instantiated Column class.
+     *
+     * @param  string|Column  $columns
+     *
+     * @return self
+     */
+    public function addColumn($columns)
+    {
+        return $this->addColumns([$columns]);
+    }
+
+    /**
+     * Get the items of the table.
      *
      * @return array
      */
@@ -114,7 +122,7 @@ class ItemList
     }
 
     /**
-     * Sets the items of the table. It must be called after specifying the columns.
+     * Set the items of the table. It must be called after specifying the columns.
      *
      * @param  array  $items
      *
@@ -128,7 +136,7 @@ class ItemList
     }
 
     /**
-     * Adds a single item to the table.
+     * Add a single item to the table.
      *
      * @param  array  $items
      *
@@ -140,7 +148,7 @@ class ItemList
     }
 
     /**
-     * Adds the items to the table. It must be called after specifying the columns.
+     * Add the items to the table. It must be called after specifying the columns.
      *
      * @param  array  $items   Multidimensional array which contains arrays of data for each row.
      *
@@ -169,7 +177,7 @@ class ItemList
     }
 
     /**
-     * Returns if the table has action buttons.
+     * Return if the table has action buttons.
      *
      * @return bool
      */
@@ -179,7 +187,7 @@ class ItemList
     }
 
     /**
-     * Returns if the table allows multiple selection.
+     * Return if the table allows multiple selection.
      *
      * @return bool
      */
@@ -189,7 +197,7 @@ class ItemList
     }
 
     /**
-     * Sets the buttons of the table.
+     * Set the buttons of the table.
      *
      * @param  array|string  $actions
      *
@@ -203,7 +211,7 @@ class ItemList
     }
 
     /**
-     * Adds buttons to the table.
+     * Add buttons to the table.
      *
      * @param  array|string  $actions
      *
@@ -222,7 +230,7 @@ class ItemList
     }
 
     /**
-     * Returns the HTML for the table.
+     * Return the HTML for the table.
      *
      * @return bool
      */

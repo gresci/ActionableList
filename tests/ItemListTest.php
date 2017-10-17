@@ -36,7 +36,7 @@ class ItemListTest extends TestCase
         $itemlist->addColumns(['three', 'four']);
         $this->assertTrue(count($itemlist->getColumns()) === 4);
 
-        $itemlist->addColumns('five');
+        $itemlist->addColumn('five');
         $this->assertTrue(count($itemlist->getColumns()) === 5);
     }
 
