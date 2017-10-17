@@ -229,7 +229,7 @@ class ItemList
     public function getHTML()
     {
         $view = view('actionablelist::table', [
-            'catalog' => $this,
+            'table' => $this,
         ]);
 
         return new HtmlString($view);

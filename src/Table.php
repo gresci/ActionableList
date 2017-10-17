@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Catalog is a wrapper for ItemList.
+ * Table is a wrapper for ItemList.
  * It allows you to call static methods which automatically create new instances of ItemList.
  */
 
 namespace GaspariLab\ActionableList;
 
-class Catalog
+class Table
 {
     /**
      * Quickly create a new Instance of ItemList.

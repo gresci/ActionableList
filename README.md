@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is a package for **Laravel 5.5** that lets you easily create catalogs of items and show them as tables, especially for administration panels.
+This is a package for **Laravel 5.5** that lets you easily create tables of items, especially for administration panels.
 
 ## Postcardware
 
@@ -38,10 +38,10 @@ This will copy the views to the `resources/views/vendor/actionablelist` folder o
 
 ## Usage
 
-### Complete syntax for creating a Catalog
+### Complete syntax for creating a Table
 ``` php
-// Instantiate a new Catalog
-$catalog = new Catalog();
+// Instantiate a new Table
+$table = new Table();
 
 // Add columns
 $itemlist->setColumns(['Quantity', 'Color', 'Animal']);
@@ -54,12 +54,12 @@ $itemlist->setItems([
 ]);
 ```
 
-### Quickly creating a Catalog
-You can also quickly create a new Catalog using the static `make()` function. The first parameter is an array of the columns, the second parameters is an array with the items of the table nested as arrays.
+### Quickly creating a Table
+You can also quickly create a new Table using the static `make()` function. The first parameter is an array of the columns, the second parameters is an array with the items of the table nested as arrays.
 
 Example: creating a table with three columns and two items inside.
 ``` php
-$catalog = Catalog::make([
+$table = Table::make([
     'id' => 'ID',
     'title' => 'Title',
     'created_by' => 'Author',
@@ -70,16 +70,16 @@ $catalog = Catalog::make([
 ]);
 ```
 
-The Catalog also has a fluent interface which lets you to append methods, like the Laravel Query Builder.
+The Table also has a fluent interface which lets you to append methods, like the Laravel Query Builder.
 ``` php
-Catalog::setColumns($columns)->setItems($items)->addItem($item); // ...and so on
+Table::setColumns($columns)->setItems($items)->addItem($item); // ...and so on
 ```
 
 ### Printing the table inside the view
 
-In you Blade view you can print the Catalog this way:
+In you Blade view you can print the Table this way:
 ``` php
-{{ $catalog->getHtml() }}
+{{ $table->getHtml() }}
 ```
 
 `getHtml()` returns an `HtmlString` object, which is not escaped by Laravel, so there's no need to use the `{{!! !!}}` Blade syntax. **Beware** that **you need to manually escape** every user-provided input that will be printed inside of your table. This will probably be fixed in a next version to make it automatic.

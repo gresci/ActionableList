@@ -2,7 +2,7 @@
     <table class="table responsive-table">
         <thead>
             <tr>
-                @foreach($catalog->columns as $column)
+                @foreach($table->columns as $column)
                     <th class="col-testo">
                         {{ $column->name }}
 
@@ -21,7 +21,7 @@
                     </th>
                 @endforeach
 
-                @if (! empty($catalog->actions))
+                @if (! empty($table->actions))
                     <th class="col-button">
                         &nbsp;
                     </th>
@@ -29,17 +29,17 @@
             </tr>
         </thead>
 
-        @foreach ($catalog->items as $item)
+        @foreach ($table->items as $item)
             <tr>
-                @for ($i = 0; $i < count($catalog->columns); $i++)
+                @for ($i = 0; $i < count($table->columns); $i++)
                     <td>
                         {{ $item[$i] }}
                     </td>
                 @endfor
 
-                @if (! empty($catalog->actions))
+                @if (! empty($table->actions))
                     <td class="col-button">
-                        @foreach ($catalog->actions as $action)
+                        @foreach ($table->actions as $action)
                             {{ $action }}
                         @endforeach
                     </td>
