@@ -5,26 +5,25 @@ namespace GaspariLab\ActionableList;
 class Column
 {
     /**
-     * @var bool   $hasContent   Specifies if the column has content or if it's empty (for example, it only contains
-     *                           action buttons).
+     * @var bool   $hasActions   Specifies if the column contains action buttons or has actual content.
      */
-    protected $hasContent = true;
-    
+    protected $hasActions = false;
+
     /**
      * @var string  $name   The full name of the column.
      */
     protected $name = '';
-    
+
     /**
      * @var string  $slug   The slug of the column. Useful for HTML class names or IDs.
      */
     protected $slug = '';
-    
+
     /**
      * @var string|null  $sortableName   The name for the sorting of this column.
      */
     protected $sortableName = null;
-    
+
     /**
      * Quickly set values on column instantiation.
      *
@@ -40,21 +39,21 @@ class Column
         $slug === false ?: $this->setSlug($slug);
         $sortableName === false ?: $this->setSortableName($sortableName);
     }
-    
+
     /**
-     * Sets the full name of the column.
+     * Set if the column has action buttons or it has actual content.
      *
-     * @param  bool $hasContent  Set if the column has content or not (for example, if it only contains action buttons).
+     * @param  bool $hasActions  True if the column doesn't have content but only buttons.
      *
      * @return self
      */
-    public function setContent(bool $hasContent)
+    public function setHasActions(bool $hasActions)
     {
-        $this->hasContent = $hasContent;
-        
+        $this->hasActions = $hasActions;
+
         return $this;
     }
-    
+
     /**
      * Sets the full name of the column.
      *

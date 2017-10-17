@@ -14,12 +14,12 @@ class ColumnTest extends TestCase
         $column->setName('Title')
             ->setSlug('slug_title')
             ->setSortableName('sort_title')
-            ->setContent(true);
-        
+            ->setHasActions(true);
+
         $this->assertTrue($column->name === 'Title');
         $this->assertTrue($column->slug === 'slug_title');
         $this->assertTrue($column->sortableName === 'sort_title');
-        $this->assertTrue($column->hasContent === true);
+        $this->assertTrue($column->hasActions === true);
     }
     
     public function test_set_values_directly_to_properties()
