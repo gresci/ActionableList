@@ -18,7 +18,7 @@ class Catalog
     {
         return new ItemList($columns, $items);
     }
-    
+
     /**
      * Handle dynamic method calls into the ItemList.
      *
@@ -30,7 +30,7 @@ class Catalog
     {
         return $this->make()->$method(...$parameters);
     }
-    
+
     /**
      * Handle dynamic static method calls into the method.
      *

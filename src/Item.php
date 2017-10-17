@@ -21,9 +21,9 @@ class Item
         if (! is_array($values)) {
             $values = [$values];
         }
-        
+
         $this->values = array_merge($this->values, $values);
-        
+
         return $this;
     }
 }

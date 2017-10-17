@@ -12,7 +12,7 @@ class CatalogTest extends TestCase
         $catalog = new Catalog();
         $this->assertTrue($catalog->getColumns() === []);
     }
-    
+
     public function test_call_itemlist_function_statically()
     {
         $this->assertTrue(Catalog::getColumns() === []);

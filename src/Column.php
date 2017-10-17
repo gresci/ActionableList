@@ -64,15 +64,15 @@ class Column
     public function setName(string $name)
     {
         $this->name = $name;
-        
+
         // If the slug is not set yet create the slug automatically.
         if ($this->slug === '') {
             $this->slug = str_slug($name);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Sets the slug for the column. Useful for HTML class names or IDs.
      *
@@ -83,10 +83,10 @@ class Column
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
-        
+
         return $this;
     }
-    
+
     /**
      * Sets the sorting name for the column (for example, a database column name or a URL fragment name).
      * Set to null to disable sorting for this column.
@@ -98,10 +98,10 @@ class Column
     public function setSortableName(string $sortableName = null)
     {
         $this->sortableName = $sortableName;
-        
+
         return $this;
     }
-    
+
     /**
      * Dynamically retrieve attributes of the column.
      *
@@ -112,7 +112,7 @@ class Column
     {
         return $this->{$key};
     }
-    
+
     /**
      * Dynamically set attributes of the column.
      *
@@ -124,7 +124,7 @@ class Column
     {
         $this->{'set' . ucfirst($key)}($value);
     }
-    
+
     /**
      * The __isset magic method is triggered whenever an inaccessible attribute (for example those exposed via __get)
      * is called inside of an empty() or isset() construct.

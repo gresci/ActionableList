@@ -5,7 +5,7 @@
                 @foreach($catalog->columns as $column)
                     <th class="col-testo">
                         {{ $column->name }}
-                        
+
                         @if (! empty($column->sortableName))
                             <span class="orderbuttons">
                                 <a href="?{{ http_build_query(array_merge(request()->query(), ['col' => $column->sortableName, 'ord' => 'asc'])) }}" class="dropup">
@@ -20,7 +20,7 @@
                         @endif
                     </th>
                 @endforeach
-                
+
                 @if (! empty($catalog->actions))
                     <th class="col-button">
                         &nbsp;
@@ -36,7 +36,7 @@
                         {{ $item[$i] }}
                     </td>
                 @endfor
-                
+
                 @if (! empty($catalog->actions))
                     <td class="col-button">
                         @foreach ($catalog->actions as $action)
