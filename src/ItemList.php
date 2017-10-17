@@ -61,7 +61,7 @@ class ItemList
     {
         $this->columns = [];
 
-        return $this->addColumns(is_array($columns) ? $columns : [$columns]);
+        return $this->addColumns(array_wrap($columns));
     }
 
     /**
@@ -78,7 +78,10 @@ class ItemList
         foreach ($columns as $key => $value) {
             // If the value is a string, just create a column with that name.
             if (is_string($value)) {
-                $columns[$key] = new Column($value, false, $key);
+                // If the array key is a string, set is as the slug. Otherwise, keep the automatically generated slug.
+                $slug = is_string($key) ? $key : false;
+
+                $columns[$key] = new Column($value, $slug, $key);
             }
 
             // If the value is an array, pass his values into the constructor of the column.
@@ -100,15 +103,16 @@ class ItemList
 
     /**
      * Add a column to the existing list of columns.
-     * You can pass a string to create a column with that name, or an already instantiated Column class.
+     * You can pass a string to create a column with that name, or an array with the slug as the key and the
+     * title of the column as the value, or an already instantiated Column class.
      *
-     * @param  string|Column  $columns
+     * @param  string|array|Column  $columns
      *
      * @return self
      */
     public function addColumn($columns)
     {
-        return $this->addColumns([$columns]);
+        return $this->addColumns(array_wrap($columns));
     }
 
     /**

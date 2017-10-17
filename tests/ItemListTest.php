@@ -48,6 +48,23 @@ class ItemListTest extends TestCase
         $this->assertTrue($itemlist->getColumns() === $itemlist->columns);
     }
 
+    public function test_check_if_adding_column_via_string_sets_the_correct_slug()
+    {
+        // Try the automatic generation of the slug
+        $itemlist = new ItemList();
+        $itemlist->addColumn('A Name Without The Slug?');
+
+        $this->assertTrue($itemlist->columns[0]->name === 'A Name Without The Slug?');
+        $this->assertTrue($itemlist->columns[0]->slug === 'a-name-without-the-slug');
+
+        // Try setting a custom slug
+        $itemlist = new ItemList();
+        $itemlist->addColumn(['the-slug' => 'The Name!']);
+
+        $this->assertTrue($itemlist->columns[0]->name === 'The Name!');
+        $this->assertTrue($itemlist->columns[0]->slug === 'the-slug');
+    }
+
     public function test_set_items()
     {
         $itemlist = new ItemList();
