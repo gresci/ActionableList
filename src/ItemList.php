@@ -234,20 +234,6 @@ class ItemList
     }
 
     /**
-     * Return the HTML for the table.
-     *
-     * @return bool
-     */
-    public function getHTML()
-    {
-        $view = view('actionablelist::table', [
-            'table' => $this,
-        ]);
-
-        return new HtmlString($view);
-    }
-
-    /**
      * Dynamically retrieve attributes of the ItemList.
      *
      * @param  string  $key

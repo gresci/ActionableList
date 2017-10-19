@@ -79,7 +79,7 @@ Table::setColumns($columns)->setItems($items)->addItem($item); // ...and so on
 
 In you Blade view you can print the Table this way:
 ``` php
-{{ $table->getHtml() }}
+@include('actionablelist::table')
 ```
 
 `getHtml()` returns an `HtmlString` object, which is not escaped by Laravel, so there's no need to use the `{{!! !!}}` Blade syntax. **Beware** that **you need to manually escape** every user-provided input that will be printed inside of your table. This will probably be fixed in a next version to make it automatic.
