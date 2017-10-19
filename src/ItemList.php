@@ -76,22 +76,19 @@ class ItemList
     {
         // This cycle modifies the $columns array, keeping any non-numeric index as it is.
         foreach ($columns as $key => $value) {
-            // If the value is a string, just create a column with that name.
-            if (is_string($value)) {
+            if (is_array($value)) {
+                // If the value is an array, pass his values into the constructor of the column.
+                $columns[$key] = new Column(...$value);
+            } elseif ($value instanceof Column) {
+                // If the value is an instance of Column, put it as is.
+                $columns[$key] = $value;
+            } else {
+                // If the value is something else, just create a column with that as a parameter.
+
                 // If the array key is a string, set is as the slug. Otherwise, keep the automatically generated slug.
                 $slug = is_string($key) ? $key : false;
 
                 $columns[$key] = new Column($value, $slug, $key);
-            }
-
-            // If the value is an array, pass his values into the constructor of the column.
-            if (is_array($value)) {
-                $columns[$key] = new Column(...$value);
-            }
-
-            // If the value is an instance of Column, put it as is.
-            if ($value instanceof Column) {
-                $columns[$key] = $value;
             }
         }
 

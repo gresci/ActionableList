@@ -33,11 +33,24 @@ class Column
      *
      * @return self
      */
-    public function __construct($name = false, $slug = false, $sortableName = false)
+    public function __construct($name = '', $slug = false, $sortableName = false)
     {
-        $name === false ?: $this->setName($name);
-        $slug === false ?: $this->setSlug($slug);
-        $sortableName === false ?: $this->setSortableName($sortableName);
+        // If the name is false, automatically set the column as an "actions" column (i.e.: a column
+        // without content which is not orderable)
+        if ($name === false) {
+            $this->setHasActions();
+        } else {
+            // Otherwise, call the appropriate methods for settings the properties of the columns.
+            $this->setName($name);
+
+            if ($slug !== false) {
+                $this->setSlug($slug);
+            }
+
+            if ($sortableName !== false) {
+                $this->setSortableName($sortableName);
+            }
+        }
     }
 
     /**
@@ -47,7 +60,7 @@ class Column
      *
      * @return self
      */
-    public function setHasActions(bool $hasActions)
+    public function setHasActions(bool $hasActions = true)
     {
         $this->hasActions = $hasActions;
 
