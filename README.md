@@ -4,15 +4,7 @@
 
 This is a package for **Laravel 5.5** that lets you easily create tables of items, especially for administration panels.
 
-## Postcardware
-
-This package is [MIT-licensed](LICENSE.md), but if it makes it to your production environment we'd appreciate if you send us a postcard from your hometown. Our address is:
-```
-GaspariLab
-via Minghetti, 18
-40057 Cadriano di Granarolo E. (BO)
-ITALY
-```
+**Please bear in mind that this package is under development**, it is not stable for production yet. For example, new releases could introduce breaking changes. Thank you.
 
 ## Install
 
@@ -88,6 +80,16 @@ In you Blade view you can print the Table this way:
 
 ``` bash
 vendor/bin/phpunit vendor/gasparilab/actionablelist/tests
+```
+
+## Postcardware
+
+This package is [MIT-licensed](LICENSE.md), but if it makes it to your production environment we'd appreciate if you send us a postcard from your hometown. Our address is:
+```
+GaspariLab
+via Minghetti, 18
+40057 Cadriano di Granarolo E. (BO)
+ITALY
 ```
 
 ## Credits
