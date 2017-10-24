@@ -36,10 +36,10 @@ This will copy the views to the `resources/views/vendor/actionablelist` folder o
 $table = new Table();
 
 // Add columns
-$itemlist->setColumns(['Quantity', 'Color', 'Animal']);
+$table->setColumns(['Quantity', 'Color', 'Animal']);
 
 // Set the items (rows)
-$itemlist->setItems([
+$table->setItems([
     ['one', 'red', 'cat'],
     ['two', 'green', 'bird'],
     ['three', 'blue', 'dog'],
