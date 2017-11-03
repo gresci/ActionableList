@@ -2,6 +2,8 @@
 
 namespace GaspariLab\ActionableList;
 
+use InvalidArgumentException;
+
 class Table
 {
     /**
@@ -10,45 +12,35 @@ class Table
     protected $columns = [];
 
     /**
-     * @var array  $items               The items inside of the table.
+     * @var array  $datasets            The datasets inside of the table.
      */
-    protected $items = [];
+    protected $datasets = [];
 
     /**
-     * @var array  $actions             List of action buttons for each item of the list.
-     */
-    protected $actions = [];
-
-    /**
-     * @var array  $multipleActions     List of action buttons for multiple selected items.
-     */
-    protected $multipleActions = [];
-
-    /**
-     * Shortcut for the make() function.
+     * Quickly set the columns, the formatters and the rows of the table.
      *
-     * @param array|false   $columns   The list of columns.
-     * @param array|false   $items     The list of array.
+     * @param array  $columns     The list of columns.
+     * @param array  $formatters  The list of closures, strings or Htmlables that return formatters of the cells.
+     * @param array  $datasets    The datasets to show in the table.
      *
      * @return self
      */
-    public function __construct($columns = false, $items = false)
+    protected function make($columns = [], $formatters = [], $dataset = null)
     {
-        return $this->make($columns, $items);
-    }
+        // Create the columns of the table
+        $this->addColumns($columns);
 
-    /**
-     * Quickly set columns and items for the table.
-     *
-     * @param array|false   $columns   The list of columns.
-     * @param array|false   $items     The list of array.
-     *
-     * @return self
-     */
-    protected function make($columns = false, $items = false)
-    {
-        $columns === false ?: $this->setColumns($columns);
-        $items === false ?: $this->setItems($items);
+        if (count($this->columns) !== count($formatters)) {
+            throw new InvalidArgumentException('The column and the formatter arrays are not of the same length.');
+        }
+
+        // Assign the formatter to the columns
+        $this->addFormatters($formatters);
+
+        // Add the dataset
+        if ($dataset !== null) {
+            $this->addDataset($dataset);
+        }
 
         return $this;
     }
@@ -64,29 +56,18 @@ class Table
     }
 
     /**
-     * Sets the columns of the table.
+     * Add an array of columns (as strings, or arrays with name + slug + sortable name values, or already
+     * instantiated Column objects) to the existing list of columns.
      *
      * @param  array|string|Column  $columns
      *
      * @return self
      */
-    protected function setColumns($columns)
+    protected function addColumns($columns)
     {
-        $this->columns = [];
+        // If a single column is passed, wrap it into an array.
+        $columns = array_wrap($columns);
 
-        return $this->addColumns(array_wrap($columns));
-    }
-
-    /**
-     * Add an array of columns (as strings, or arrays with name + slug + sortable name values, or already
-     * instantiated Column objects) to the existing list of columns.
-     *
-     * @param  array  $columns
-     *
-     * @return self
-     */
-    protected function addColumns(array $columns)
-    {
         // This cycle modifies the $columns array, keeping any non-numeric index as it is.
         foreach ($columns as $key => $value) {
             if (is_array($value)) {
@@ -112,135 +93,86 @@ class Table
     }
 
     /**
-     * Add a column to the existing list of columns.
-     * You can pass a string to create a column with that name, or an array with the slug as the key and the
-     * title of the column as the value, or an already instantiated Column class.
+     * Add a formatter (an anonymous function, a string, an Htmlable) for each column of the table.
      *
-     * @param  string|array|Column  $columns
+     * @param  array  $formatters  An array of formatters for each column.
      *
      * @return self
      */
-    protected function addColumn($columns)
+    protected function addFormatters(array $formatters)
     {
-        return $this->addColumns(array_wrap($columns));
-    }
-
-    /**
-     * Get the items of the table.
-     *
-     * @return array
-     */
-    protected function getItems()
-    {
-        return $this->items;
-    }
-
-    /**
-     * Set the items of the table. It must be called after specifying the columns.
-     *
-     * @param  array  $items
-     *
-     * @return self
-     */
-    protected function setItems($items)
-    {
-        $this->items = [];
-
-        return $this->addItems($items);
-    }
-
-    /**
-     * Add a single item to the table.
-     *
-     * @param  array  $items
-     *
-     * @return self
-     */
-    protected function addItem($item)
-    {
-        return $this->addItems([$item]);
-    }
-
-    /**
-     * Add the items to the table. It must be called after specifying the columns.
-     *
-     * @param  array  $items   Multidimensional array which contains arrays of data for each row.
-     *
-     * @return self
-     */
-    protected function addItems($items)
-    {
-        if (! is_array($items)) {
-            throw new \Exception('$items must be a multidimensional array.');
+        foreach ($formatters as $key => $formatter) {
+            $this->columns[$key]->setFormatter($formatter);
         }
-
-        foreach ($items as $item) {
-            if (! is_array($items)) {
-                throw new \Exception('$items must be a multidimensional array.');
-            }
-
-            if (count($item) > count($this->columns)) {
-                throw new \Exception('You cannot specify more items than the columns available.');
-            }
-        }
-
-        // Merge using array_values to remove non-numeric indexes from the columns array
-        $this->items = array_merge($this->items, array_values($items));
 
         return $this;
     }
 
     /**
-     * Return if the table has action buttons.
+     * Add one iterable dataset to the table.
      *
-     * @return bool
-     */
-    protected function hasActions()
-    {
-        return ! empty($this->actions);
-    }
-
-    /**
-     * Return if the table allows multiple selection.
-     *
-     * @return bool
-     */
-    protected function hasMultipleActions()
-    {
-        return ! empty($this->multipleActions);
-    }
-
-    /**
-     * Set the buttons of the table.
-     *
-     * @param  array|string  $actions
+     * @param  iterable  $dataset  The iterable dataset (e.g.: a Collection, an Eloquent collection, an array...).
      *
      * @return self
      */
-    protected function setActions($actions)
+    protected function addDataset(iterable $dataset)
     {
-        $this->actions = [];
-
-        return $this->addActions($actions);
-    }
-
-    /**
-     * Add buttons to the table.
-     *
-     * @param  array|string  $actions
-     *
-     * @return self
-     */
-    protected function addActions($actions)
-    {
-        if (! is_array($actions)) {
-            $actions = [$actions];
-        }
-
-        // Merge using array_values to remove non-numeric indexes from the columns array
-        $this->actions = array_merge($this->actions, array_values($actions));
+        $this->datasets[] = $dataset;
 
         return $this;
+    }
+
+    /**
+     * Add more than one iterable dataset to the table.
+     *
+     * @param  array  $datasets  The iterable datasets, wrapped in an array.
+     *
+     * @return self
+     */
+    protected function addDatasets(array $datasets = [])
+    {
+        foreach ($datasets as $dataset) {
+            $this->addDataset($dataset);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the output of a cell by column id and row id.
+     *
+     * @param int $columnKey    The column index.
+     * @param int $rowKey       The row index.
+     * @return mixed
+     */
+    protected function getCell($columnKey, $rowKey)
+    {
+        $data = [];
+
+        // For each dataset, take the row.
+        foreach ($this->datasets as $dataset) {
+            $data[] = $dataset[$rowKey];
+        }
+
+        return $this->columns[$columnKey]->getCellOutput($data);
+    }
+
+    /**
+     * Returns a Generator which can be cycled with a foreach loop.
+     */
+    protected function getRows()
+    {
+        // Cycle the first dataset
+        foreach ($this->datasets[0] as $n => $firstData) {
+            $combined = [];
+
+            // Combine the nth-element from every dataset into an array.
+            foreach ($this->datasets as $dataset) {
+                $combined[] = $dataset[$n];
+            }
+
+            yield $n => $combined;
+        }
     }
 
     /**
@@ -251,12 +183,8 @@ class Table
      */
     public function __get($key)
     {
-        // We expose the attributes this way to make them read-only.
-        if (in_array($key, ['columns', 'items', 'actions'])) {
-            return $this->{$key};
-        }
-
-        return null;
+        // We expose the protected attributes this way to make them read-only.
+        return $this->{$key};
     }
 
     /**

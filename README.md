@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is a package for **Laravel 5.5** that lets you easily create tables of items, especially for administration panels.
+This is a package for **Laravel 5.5** that lets you easily create tables of items, especially for administration panels. It requires **PHP 7.1**.
 
 **Please bear in mind that this package is under development**, it is not stable for production yet. For example, new releases could introduce breaking changes. Thank you.
 
@@ -13,15 +13,9 @@ You can easily install this package via `composer`:
 composer require gasparilab/actionablelist
 ```
 
-Don't forget to put this package service provider into the `providers` array, inside of your `config/app.php`:
-```
-'providers' => [
-    // ...
-    GaspariLab\ActionableList\ActionableListServiceProvider::class,
-]
-```
+This package supports the new Laravel service provider autodiscovery, so there's no need to put it manually into the `providers` array in `config/app.php`.
 
-If you want to customize the tables HTML code (you probably will!), you can publish the included views with the following Artisan command:
+If you want to customize the tables HTML code (you probably will!), you can publish the included views into your project with the following Artisan command:
 ``` bash
 php artisan vendor:publish --tag=actionablelist --force
 ```
@@ -36,18 +30,23 @@ This will copy the views to the `resources/views/vendor/actionablelist` folder o
 $table = new Table();
 
 // Add columns
-$table->setColumns(['Quantity', 'Color', 'Animal']);
+$table->addColumns(['Quantity', 'Color', 'Animal']);
 
-// Set the items (rows)
-$table->setItems([
+// Add the dataset
+$table->addDataset([
     ['one', 'red', 'cat'],
     ['two', 'green', 'bird'],
     ['three', 'blue', 'dog'],
 ]);
+
+// Set the formatter for a column
+$table->columns[0]->setFormatter(function ($animals) {
+    return 'The color is ' . $animals[1];
+});
 ```
 
 ### Quickly creating a Table
-You can also quickly create a new Table using the static `make()` function. The first parameter is an array of the columns, the second parameters is an array with the items of the table nested as arrays.
+You can also quickly create a new Table using the static `make()` function. The first parameter is an array of the columns, the second parameters is an array of formatters for each column, the third parameter is the dataset.
 
 Example: creating a table with three columns and two items inside.
 ``` php
@@ -56,16 +55,30 @@ $table = Table::make([
     'title' => 'Title',
     'created_by' => 'Author',
 ], [
+    function ($row) {
+        return 'ID: ' . $row[0];
+    },
+    function ($row) {
+        // Return the title
+        return $row[1];
+    },
+    function ($row) {
+        return new HtmlString('<em>The author is:</em> ' . $row[2]);
+    },
+], [
     [1, 'Lorem Ipsum', 'John Doe'],
     [2, 'Dolor Sit', 'Pippo Pluto'],
-    // ...
+    // ...more rows...
 ]);
 ```
 
-The Table also has a fluent interface which lets you to append methods, like the Laravel Query Builder.
+The Table also has a fluent interface which lets you to chain methods, like the Query Builder.
 ``` php
-Table::setColumns($columns)->setItems($items)->addItem($item); // ...and so on
+Table::addColumns($columns)->addDataset($data)->addFormatters($formatters); // ...and so on
 ```
+
+### Datasets
+Datasets can be arrays, Collections, Eloquent Collections or any other [iterable](http://php.net/manual/en/language.types.iterable.php) which also implements the ArrayAccess interface.
 
 ### Printing the table inside the view
 
@@ -73,8 +86,6 @@ In you Blade view you can print the Table this way:
 ``` php
 @include('actionablelist::table')
 ```
-
-`getHtml()` returns an `HtmlString` object, which is not escaped by Laravel, so there's no need to use the `{{!! !!}}` Blade syntax. **Beware** that **you need to manually escape** every user-provided input that will be printed inside of your table. This will probably be fixed in a next version to make it automatic.
 
 ## Testing
 

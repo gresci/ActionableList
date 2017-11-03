@@ -34,23 +34,19 @@
             </tr>
         </thead>
 
-        {{-- Table contents --}}
-        @foreach ($table->items as $item)
+        {{--  Print the table content  --}}
+        @foreach ($table->getRows() as $row)
             <tr>
-                {{-- For each column, print its contents --}}
-                @for ($i = 0; $i < count($table->columns); $i++)
-                    @if ($table->columns[$i]->hasActions === true)
-                        {{-- If the current column contains action buttons, print a different class --}}
+                @foreach ($table->columns as $column)
+                    @if ($column->hasActions)
                         <td class="col-button">
                     @else
                         <td>
                     @endif
-                            {{-- The content of the cell --}}
-                            {{ $item[$i] }}
+                            {{ $column->getCellOutput($row) }}
                         </td>
-                @endfor
+                @endforeach
             </tr>
         @endforeach
-
     </table>
 </div>

@@ -2,6 +2,8 @@
 
 namespace GaspariLab\ActionableList;
 
+use Illuminate\Contracts\Support\Htmlable;
+
 class Column
 {
     /**
@@ -25,6 +27,12 @@ class Column
     protected $sortableName = null;
 
     /**
+     * @var callable|string|Htmlable  $formatter  The anonymous function to be called,
+     *                                            or the string to print when filling the rows.
+     */
+    protected $formatter = null;
+
+    /**
      * Quickly set values on column instantiation.
      *
      * @param string|bool   $name           The full name of the column.
@@ -36,7 +44,7 @@ class Column
     public function __construct($name = '', $slug = false, $sortableName = false)
     {
         // If the name is false, automatically set the column as an "actions" column (i.e.: a column
-        // without content which is not orderable)
+        // without formatter which is not orderable)
         if ($name === false) {
             $this->setHasActions();
         } else {
@@ -113,6 +121,53 @@ class Column
         $this->sortableName = $sortableName;
 
         return $this;
+    }
+
+    /**
+     * Set the anonymous function to be called or the string to be printed for each row.
+     *
+     * @param callable|string|Htmlable   $formatter   The anonymous function or the string to print.
+     *
+     * @return self
+     */
+    public function setFormatter($formatter)
+    {
+        if (! is_string($formatter) && ! is_callable($formatter) && ! $formatter instanceof Htmlable) {
+            throw new \Exception('setFormatter() requires an anonymous function, a string or an Htmlable');
+        }
+
+        $this->formatter = $formatter;
+
+        return $this;
+    }
+
+    /**
+     * Get the output of a cell by passing its data into the formatter.
+     *
+     * @param mixed  $data  The data for this row (an array if there are multiple datasets).
+     *
+     * @return string|Htmlable
+     */
+    public function getCellOutput($data = [])
+    {
+        // If the formatter of this column is just a string, print it as is.
+        if (is_string($this->formatter)) {
+            return $this->formatter;
+        }
+
+        // If the formatter implements the Htmlable interface, print its html output.
+        if ($this->formatter instanceof Htmlable) {
+            return $this->formatter->toHtml();
+        }
+
+        // If the formatter is an anonymous function, return its value by passing the $data.
+        if (is_callable($this->formatter)) {
+            // If $data is not an array (for example, a single Model), then wrap it inside an array.
+            $data = array_wrap($data);
+
+            // Pass the data into the function using argument unpacking.
+            return ($this->formatter)(...$data);
+        }
     }
 
     /**

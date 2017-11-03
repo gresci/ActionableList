@@ -13,15 +13,15 @@ class TableTest extends TestCase
         $columns = ['one', 'two', 'three'];
 
         $table = new Table();
-        $table->setColumns($columns);
+        $table->addColumns($columns);
 
         $this->assertTrue(count($table->getColumns()) === 3);
     }
 
-    public function test_set_column_string()
+    public function test_add_column_string()
     {
         $table = new Table();
-        $table->setColumns('testing');
+        $table->addColumns('testing');
 
         $this->assertTrue(count($table->getColumns()) === 1);
     }
@@ -30,20 +30,20 @@ class TableTest extends TestCase
     {
         $table = new Table();
 
-        $table->setColumns(['one', 'two']);
+        $table->addColumns(['one', 'two']);
         $this->assertTrue(count($table->getColumns()) === 2);
 
         $table->addColumns(['three', 'four']);
         $this->assertTrue(count($table->getColumns()) === 4);
 
-        $table->addColumn('five');
+        $table->addColumns('five');
         $this->assertTrue(count($table->getColumns()) === 5);
     }
 
     public function test_columns_property_exposes_same_array_as_getColumns()
     {
         $table = new Table();
-        $table->setColumns(['one', 'two', 'three']);
+        $table->addColumns(['one', 'two', 'three']);
 
         $this->assertTrue($table->getColumns() === $table->columns);
     }
@@ -52,75 +52,56 @@ class TableTest extends TestCase
     {
         // Try the automatic generation of the slug
         $table = new Table();
-        $table->addColumn('A Name Without The Slug?');
+        $table->addColumns('A Name Without The Slug?');
 
         $this->assertTrue($table->columns[0]->name === 'A Name Without The Slug?');
         $this->assertTrue($table->columns[0]->slug === 'a-name-without-the-slug');
 
         // Try setting a custom slug
         $table = new Table();
-        $table->addColumn(['the-slug' => 'The Name!']);
+        $table->addColumns(['the-slug' => 'The Name!']);
 
         $this->assertTrue($table->columns[0]->name === 'The Name!');
         $this->assertTrue($table->columns[0]->slug === 'the-slug');
     }
 
-    public function test_set_items()
+    protected function getTestTable()
     {
-        $table = new Table();
-        $table->setColumns(['Quantity', 'Color', 'Animal']);
-
-        $items = [
-            ['one', 'red', 'cat'],
-            ['two', 'green', 'bird'],
-            ['three', 'blue', 'dog'],
-        ];
-        $table->setItems($items);
-        $this->assertTrue($table->items === $items);
-
-        // Test adding new items
-        $table->addItems([
-            ['four', 'yellow', 'giraffe'],
-            ['five', 'violet', 'cow'],
-        ]);
-        $this->assertTrue($table->items[3] === ['four', 'yellow', 'giraffe']);
-        $this->assertTrue($table->items[4] === ['five', 'violet', 'cow']);
-
-        // Test adding a single item
-        $table->addItem(['six', 'brown', 'elephants']);
-        $this->assertTrue($table->items[5] === ['six', 'brown', 'elephants']);
-    }
-
-    public function test_adding_bigger_item_than_columns()
-    {
-        $this->expectException(\Exception::class);
-
-        $table = new Table();
-        $table->setColumns(['one', 'two']);
-
-        // Items have more columns than specified
-        $items = [
-            ['one', 'red', 'cat', 'funny'],
-            ['two', 'green', 'bird', 'sad'],
-        ];
-
-        $table->setItems($items);
-    }
-
-    public function test_set_items_via_constructor()
-    {
-        $table = new Table([
+        return Table::make([
             'qty' => 'Quantity',
             'color' => 'Color',
             'animals.name' => 'Animal',
         ], [
-            ['one', 'red', 'cat'],
-            ['two', 'green', 'bird'],
-            ['three', 'blue', 'dog'],
+            function ($arr) {
+                return $arr[0];
+            },
+            function ($color) {
+                return 'The color is '.$color[1];
+            },
+            function () {
+                return 'This is a table';
+            }
+        ], [
+            ['3', 'red', 'dog'],
+            ['5', 'blue', 'cat'],
+            ['16', 'yellow', 'bird'],
         ]);
+    }
 
-        $this->assertTrue(count($table->columns) === 3);
-        $this->assertTrue($table->columns[0] instanceof Column);
-        $this->assertTrue(count($table->items) === 3);
+    public function test_set_dataset_via_constructor()
+    {
+        $this->assertTrue(count($this->getTestTable()->columns) === 3);
+    }
+
+    public function test_instancing_columns_via_constructor()
+    {
+        $this->assertTrue($this->getTestTable()->columns[0] instanceof Column);
+    }
+
+    public function test_get_cell_from_table()
+    {
+        $table = $this->getTestTable();
+
+        $this->assertTrue($table->getCell(1, 0) === 'The color is red');
     }
 }
