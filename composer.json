@@ -17,12 +17,8 @@
         }
     ],
     "require": {
-        "php": "~7.1",
-        "illuminate/support": "~5.1"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^2.3",
-        "phpunit/phpunit": "~5.7"
     },
     "autoload": {
         "psr-4": {
